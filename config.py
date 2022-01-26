@@ -1,15 +1,15 @@
 import dataclasses
 from pathlib import Path
 
-from datasets import ShakespeareDatasetReader, YelpDatasetReader
+from datasets import ShakespeareDatasetReader, YelpDatasetReader, KeigoDatasetReader
 from models import Seq2Seq, Seq2SeqMeaningStyle, StyleClassifier
-from settings import SHAKESPEARE_DATASET_DIR, YELP_DATASET_DIR
+from settings import SHAKESPEARE_DATASET_DIR, YELP_DATASET_DIR, KEIGO_DATASET_DIR
 
 
 @dataclasses.dataclass
 class TrainConfig:
     model_class: type = Seq2SeqMeaningStyle
-    preprocess_exp_id: str = 'preprocess.buppgpnf'  # Shakespeare: xxx | Yelp: 2p089c54
+    preprocess_exp_id: str = 'preprocess.u5wf47v3'  # Shakespeare: xxx | Yelp: 2p089c54
 
     embedding_size: int = 300
     hidden_size: int = 256
@@ -36,24 +36,24 @@ class TrainConfig:
     use_gauss: bool = False
 
     num_epochs: int = 500
-    batch_size: int = 1024
+    batch_size: int = 2
     best_loss: str = 'loss'
 
 
 @dataclasses.dataclass
 class PreprocessConfig:
-    data_path: Path = YELP_DATASET_DIR
-    dataset_reader_class: type = YelpDatasetReader
+    data_path: Path = KEIGO_DATASET_DIR
+    dataset_reader_class: type = KeigoDatasetReader
 
     min_len: int = 3
     max_len: int = 20
     lowercase: bool = True
-    word_embeddings: str = 'fast_text'
+    word_embeddings: str = 'gensim'
     max_vocab_size: int = 50000
 
     nb_style_dims: int = 50
     nb_style_dims_sentences: int = 50000
     style_tokens_proportion: float = 0.2
 
-    test_size: int = 10000
-    val_size: int = 10000
+    test_size: int = 1000
+    val_size: int = 1000

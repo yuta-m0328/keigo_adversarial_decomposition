@@ -11,6 +11,70 @@ import torch.utils.data
 from vocab import Vocab
 
 
+class JaSentenceStyleDatasetReader(object):
+    def __init__(self, min_len, max_len, lowercase, *args, **kwargs):
+        self.min_len = min_len
+        self.max_len = max_len
+        self.lowercase = lowercase
+
+        disable = ['tok2vec', 'morphologizer', 'parser', 'attribute_ruler', 'ner']
+        self.spacy = spacy.load("ja_core_news_lg", disable=disable)
+        self.spacy.add_pipe('sentencizer')
+
+    @abc.abstractmethod
+    def _read(self, data_path):
+        pass
+
+    def clean_sentence(self, sentence):
+        sentence_cleaned = sentence.replace('\r', '')
+        sentence_cleaned = sentence.replace('\n', '')
+        
+        return sentence_cleaned
+
+    def preprocess_sentence(self, sentence):
+        sentence = [token for token in sentence]
+
+        # cut to max len -1 for the END token
+        sentence = sentence[:self.max_len - 1]
+
+        return sentence
+
+    def read(self, data_path):
+        samples = []
+
+        for sentence, style in self._read(data_path):
+            sentence = self.clean_sentence(sentence)
+            sentence = self.spacy(sentence)
+            sentence = self.preprocess_sentence(sentence)
+
+            if len(sentence) > self.min_len:
+                sample = dict(sentence=sentence, style=style)
+                samples.append(sample)
+
+        # for i in range(5):
+            # print(f"samples{i} : {samples[i]}")
+        
+        return samples
+
+
+class KeigoDatasetReader(JaSentenceStyleDatasetReader):
+    def _read(self, data_path):
+        for file in data_path.iterdir():
+            file_style = '-'
+            if file.name.endswith('normal.txt'):
+                file_style = 'normal'
+            if file.name.endswith('keigo.txt'):
+                file_style = 'keigo'
+
+            with open(file) as f:
+                for line in f:
+                    sentence = line.strip()
+
+                    yield sentence, file_style
+
+
+
+
 class SentenceStyleDatasetReader(object):
 
     def __init__(self, min_len, max_len, lowercase, *args, **kwargs):

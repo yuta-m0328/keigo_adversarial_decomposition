@@ -1,9 +1,14 @@
 import itertools
 import json
 import pickle
+import joblib
+import dill
+import re
 
 import numpy as np
 import torch
+
+import gensim
 
 from settings import WORD_EMBEDDINGS_FILENAMES
 from vocab import Vocab
@@ -23,12 +28,44 @@ def load_json(filename):
 
 def save_pickle(obj, filename):
     with open(filename, 'wb') as f:
-        pickle.dump(obj, f)
+        pickle.dump(str(obj), f)
+        # print("checkpoint1")
+        # print(f'obj:{obj}')
+        # print(f'obj type:{type(obj)}')
+        # if type(obj) is tuple:
+            # for i in obj:
+                # print(f'checkpoint1-{i}')
+                # print(f'obj{i}:{obj}')
+                #print(f'obj type{i}:{type(obj)}')
+            # pickle.dump(str(obj), f)
+            # pickle.dump(obj, f)
+            # print(obj)
+            # return
+        # else:
+            # print("obj is not tuple")
+            # pickle.dump(str(obj), f)
 
 
 def load_pickle(filename):
     with open(filename, 'rb') as f:
         obj = pickle.load(f)
+        return obj
+        # print("checkpoint2")
+        # print(f'obj:{obj}')
+        # print(f'obj type:{type(obj)}')
+        # if type(obj) is str:
+        #     return obj
+        # else:
+        #     return obj
+        
+
+def save_dill(obj, filename):
+    with open(filename, 'wb') as f:
+        f.write(obj)
+
+def load_dill(filename):
+    with open(filename, 'rb') as f:
+        obj = dill.load(f)
 
     return obj
 
@@ -112,19 +149,31 @@ def get_sequences_lengths(sequences, masking=0, dim=1):
 
 def load_embeddings(cfg):
     word_embeddings_filename = WORD_EMBEDDINGS_FILENAMES[cfg.word_embeddings]
-    word_embeddings = load_pickle(word_embeddings_filename)
+    if cfg.word_embeddings == 'gensim':
+        print(f"use {cfg.word_embeddings} word embeddings.")
+        word_embeddings = gensim.models.KeyedVectors.load_word2vec_format(word_embeddings_filename, binary=False)
+    else:
+        word_embeddings = load_pickle(word_embeddings_filename)
+    
 
     return word_embeddings
 
 
 def create_embeddings_matrix(word_embeddings, vocab):
     embedding_size = word_embeddings[list(word_embeddings.keys())[0]].shape[0]
+    
+    # print(f"utils.py word_embeddings v")
+    # print(word_embeddings)
 
     W_emb = np.zeros((len(vocab), embedding_size), dtype=np.float32)
     special_tokens = {
         t: np.random.uniform(-0.3, 0.3, (embedding_size,))
         for t in (Vocab.START_TOKEN, Vocab.END_TOKEN, Vocab.UNK_TOKEN)
     }
+    
+    # print("start W_emb vvv")
+    # print(W_emb)
+
     special_tokens[Vocab.PAD_TOKEN] = np.zeros((embedding_size,))
     nb_unk = 0
     for i, t in vocab.id2token.items():
@@ -133,11 +182,14 @@ def create_embeddings_matrix(word_embeddings, vocab):
         else:
             if t in word_embeddings:
                 W_emb[i] = word_embeddings[t]
+                # print(f"utils.py c_matrix => word_embeddings[t] : {word_embeddings[t]}")
             else:
                 W_emb[i] = np.random.uniform(-0.3, 0.3, embedding_size)
                 nb_unk += 1
 
-    print(f'Nb unk: {nb_unk}')
+    # print(f'Nb unk: {nb_unk}')
+    # print(f'W_emb vvv')
+    # print(W_emb)
 
     return W_emb
 

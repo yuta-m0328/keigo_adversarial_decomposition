@@ -22,10 +22,13 @@ class Vocab(object):
 
     def add_document(self, document, rebuild=True):
         for token in document:
+            # print(f"vocab.py add_document => token : {token}")
             self.token_counts[token] += 1
 
             if token not in self.token2id:
+                # print(f"vocab.py add_document dic({self.token2id[token]})")
                 self.token2id[token] = len(self.token2id)
+                # print(f"vocab.py add_document dic({token} : {len(self.token2id)})")
 
         if rebuild:
             self._rebuild_id2token()
@@ -57,7 +60,8 @@ class Vocab(object):
 
         nb_tokens_after = len(self.token2id)
 
-        print(f'Vocab pruned: {nb_tokens_before} -> {nb_tokens_after}')
+        # print(f'Vocab pruned: {nb_tokens_before} -> {nb_tokens_after}')
+        # print(f'token2id : {self.token2id}')
 
     def _rebuild_id2token(self):
         self.id2token = {i: t for t, i in self.token2id.items()}
