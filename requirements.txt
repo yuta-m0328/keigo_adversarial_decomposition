@@ -2,7 +2,8 @@ argon2-cffi==21.3.0
 argon2-cffi-bindings==21.2.0
 astroid==2.2.5
 async-generator==1.10
-attrs==19.1.0
+#attrs==19.1.0
+attrs==19.2.0
 autopep8==1.4.4
 backcall==0.1.0
 bleach==3.1.0
@@ -18,7 +19,7 @@ dataclasses==0.8
 decorator==4.4.0
 defusedxml==0.6.0
 dill==0.3.4
-en-core-web-lg @ https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.2.0/en_core_web_lg-3.2.0-py3-none-any.whl
+#en-core-web-lg @ https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.2.0/en_core_web_lg-3.2.0-py3-none-any.whl
 entrypoints==0.3
 gensim==3.8.3
 idna==2.8
@@ -29,17 +30,17 @@ ipython==7.5.0
 ipython-genutils==0.2.0
 ipywidgets==7.4.2
 isort==4.3.20
-ja-core-news-lg @ https://github.com/explosion/spacy-models/releases/download/ja_core_news_lg-3.2.0/ja_core_news_lg-3.2.0-py3-none-any.whl
-ja-core-news-md @ https://github.com/explosion/spacy-models/releases/download/ja_core_news_md-3.2.0/ja_core_news_md-3.2.0-py3-none-any.whl
 ja-ginza==4.0.0
 jedi==0.13.3
 Jinja2==2.10.1
 joblib==0.13.2
 jsonschema==3.0.1
 jupyter==1.0.0
-jupyter-client==5.2.4
+#jupyter-client==5.2.4
+jupyter-client
 jupyter-console==6.0.0
-jupyter-core==4.4.0
+#jupyter-core==4.4.0
+jupyter-core
 jupyterlab-pygments==0.1.2
 jupyterlab-widgets==1.0.2
 langcodes==3.3.0
@@ -50,7 +51,8 @@ mistune==0.8.4
 murmurhash==1.0.2
 nbclient==0.5.9
 nbconvert==5.5.0
-nbformat==4.4.0
+#nbformat==4.4.0
+nbformat
 nest-asyncio==1.5.4
 nltk==3.4.3
 notebook==5.7.8
@@ -95,7 +97,8 @@ tensorboardX==1.7
 terminado==0.8.2
 testpath==0.4.2
 thinc==8.0.13
-torch @ https://download.pytorch.org/whl/cu100/torch-1.1.0-cp36-cp36m-linux_x86_64.whl
+#torch @ https://download.pytorch.org/whl/cu100/torch-1.1.0-cp36-cp36m-linux_x86_64.whl
+#torch https://download.pytorch.org/whl/cu100/torch-1.1.0-cp37-cp37m-linux_x86_64.whl
 tornado==6.0.2
 tqdm==4.62.3
 traitlets==4.3.2
@@ -109,3 +112,5 @@ webencodings==0.5.1
 widgetsnbextension==3.4.2
 wrapt==1.11.1
 zipp==3.6.0
+#ja-core-news-lg @ https://github.com/explosion/spacy-models/releases/download/ja_core_news_lg-3.2.0/ja_core_news_lg-3.2.0-py3-none-any.whl
+#ja-core-news-md @ https://github.com/explosion/spacy-models/releases/download/ja_core_news_md-3.2.0/ja_core_news_md-3.2.0-py3-none-any.whl

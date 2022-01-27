@@ -221,8 +221,9 @@ def main(preprocess_cfg, train_cfg):
     with Experiment(EXPERIMENTS_DIR, train_cfg, prefix='train') as exp:
         print(f'Experiment started: {exp.experiment_id}')
 
-        preprocess_exp = Experiment.load(EXPERIMENTS_DIR, exp.config.preprocess_exp_id)
-        dataset_train, dataset_val, dataset_test, vocab, style_vocab, W_emb = load_dataset(preprocess_exp)
+        #preprocessとtrainをまとめてるからこれはいらない
+        # preprocess_exp = Experiment.load(EXPERIMENTS_DIR, exp.config.preprocess_exp_id)
+        # dataset_train, dataset_val, dataset_test, vocab, style_vocab, W_emb = load_dataset(preprocess_exp)
 
         data_loader_train = torch.utils.data.DataLoader(dataset_train, batch_size=exp.config.batch_size, shuffle=True)
         data_loader_val = torch.utils.data.DataLoader(dataset_val, batch_size=exp.config.batch_size, shuffle=False)

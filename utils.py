@@ -9,6 +9,7 @@ import numpy as np
 import torch
 
 import gensim
+# from pymagnitude import Magnitude #Magnitudeで行いたい（速いので)
 
 from settings import WORD_EMBEDDINGS_FILENAMES
 from vocab import Vocab
@@ -152,6 +153,7 @@ def load_embeddings(cfg):
     if cfg.word_embeddings == 'gensim':
         print(f"use {cfg.word_embeddings} word embeddings.")
         word_embeddings = gensim.models.KeyedVectors.load_word2vec_format(word_embeddings_filename, binary=False)
+        # word_embeddings  = Magnitude(word_embeddings_filename)
     else:
         word_embeddings = load_pickle(word_embeddings_filename)
     
@@ -160,8 +162,11 @@ def load_embeddings(cfg):
 
 
 def create_embeddings_matrix(word_embeddings, vocab):
-    embedding_size = word_embeddings[list(word_embeddings.keys())[0]].shape[0]
-    
+    # print(word_embeddings)
+    #　ここは埋め込みサイズ(=300次元)がわかればいい
+    # embedding_size = word_embeddings[list(word_embeddings.keys())[0]].shape[0]
+    embedding_size = word_embeddings.vector_size #gensim
+    # embedding_size = word_embeddings[0][1].shape[0] #magnitude
     # print(f"utils.py word_embeddings v")
     # print(word_embeddings)
 
@@ -176,13 +181,17 @@ def create_embeddings_matrix(word_embeddings, vocab):
 
     special_tokens[Vocab.PAD_TOKEN] = np.zeros((embedding_size,))
     nb_unk = 0
+    # keys = [key for key,value in word_embeddings] #gensim
     for i, t in vocab.id2token.items():
+        # print(i,t)
         if t in special_tokens:
             W_emb[i] = special_tokens[t]
         else:
             if t in word_embeddings:
-                W_emb[i] = word_embeddings[t]
+                W_emb[i] = word_embeddings[t] #gensim
                 # print(f"utils.py c_matrix => word_embeddings[t] : {word_embeddings[t]}")
+            # if t.text in keys: #magnitude
+                # W_emb[i] = word_embeddings[i][1] #magnitude
             else:
                 W_emb[i] = np.random.uniform(-0.3, 0.3, embedding_size)
                 nb_unk += 1
