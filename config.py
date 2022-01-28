@@ -35,10 +35,11 @@ class TrainConfig:
     use_motivator: bool = True
     use_gauss: bool = False
 
-    num_epochs: int = 100
+    num_epochs: int = 10
+    # batch_size: int = 2
     batch_size: int = 2
-    # best_loss: str = 'loss'
-    best_loss: str = "loss_D_meaning" #lossなんてキーはないと言われたので
+    best_loss: str = 'loss'
+    # best_loss: str = "loss_D_meaning" #lossなんてキーはないと言われたので 追記データ数がそれなりにあるとlossが生える
 
 
 @dataclasses.dataclass
@@ -58,5 +59,5 @@ class PreprocessConfig:
 
     # test_size: int = 1000
     # val_size: int = 1000
-    test_size: int = 2
-    val_size: int = 2
+    test_size: int = 20
+    val_size: int = 20

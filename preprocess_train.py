@@ -255,6 +255,7 @@ def main(preprocess_cfg, train_cfg):
 
             evaluator.run(data_loader_val)
             losses_val = evaluator.state.metrics['loss']
+            # losses_train = engine.state.output
             # print(evaluator.state.metrics)
             # log_progress(trainer.state.epoch, trainer.state.iteration, losses_train, 'train', tensorboard_writer)
             log_progress(trainer.state.epoch, trainer.state.iteration, losses_val, 'val', tensorboard_writer)
