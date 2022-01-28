@@ -149,7 +149,7 @@ class LossAggregatorMetric(Metric):
             self.num_updates[name] += 1
 
     def compute(self):
-        losses = {name: val / self.num_updates[name] for name, val in self.total_losses.item()}
+        losses = {name: val / self.num_updates[name] for name, val in self.total_losses.items()}
 
         return losses
 
