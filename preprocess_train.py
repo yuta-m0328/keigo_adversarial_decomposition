@@ -149,7 +149,7 @@ class LossAggregatorMetric(Metric):
             self.num_updates[name] += 1
 
     def compute(self):
-        losses = {name: val / self.num_updates[name] for name, val in self.total_losses.item()}
+        losses = {name: val / self.num_updates[name] for name, val in self.total_losses.items()}
 
         return losses
 
@@ -239,7 +239,6 @@ def main(preprocess_cfg, train_cfg):
         metrics = {'loss': LossAggregatorMetric(), }
         for metric_name, metric in metrics.items():
             metric.attach(evaluator, metric_name)
-
         best_loss = np.inf
 
         @trainer.on(Events.ITERATION_COMPLETED)
@@ -256,20 +255,22 @@ def main(preprocess_cfg, train_cfg):
 
             evaluator.run(data_loader_val)
             losses_val = evaluator.state.metrics['loss']
-
+            # print(evaluator.state.metrics)
             # log_progress(trainer.state.epoch, trainer.state.iteration, losses_train, 'train', tensorboard_writer)
             log_progress(trainer.state.epoch, trainer.state.iteration, losses_val, 'val', tensorboard_writer)
-
+            # print(losses_val)
+            # print(exp.config.best_loss)
+            # print("best:",best_loss)
             if losses_val[exp.config.best_loss] < best_loss:
                 best_loss = losses_val[exp.config.best_loss]
                 save_weights(model, exp.experiment_dir.joinpath('best.th'))
 
-            tensorboard_dir = exp.experiment_dir.joinpath('log')
-            tensorboard_writer = SummaryWriter(str(tensorboard_dir))
+        tensorboard_dir = exp.experiment_dir.joinpath('log')
+        tensorboard_writer = SummaryWriter(str(tensorboard_dir))
 
-            trainer.run(data_loader_train, max_epochs=exp.config.num_epochs)
+        trainer.run(data_loader_train, max_epochs=exp.config.num_epochs)
 
-            print(f'Experiment finished: {exp.experiment_id}')
+        print(f'Experiment finished: {exp.experiment_id}')
 
 
 

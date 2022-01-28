@@ -35,9 +35,10 @@ class TrainConfig:
     use_motivator: bool = True
     use_gauss: bool = False
 
-    num_epochs: int = 500
+    num_epochs: int = 100
     batch_size: int = 2
-    best_loss: str = 'loss'
+    # best_loss: str = 'loss'
+    best_loss: str = "loss_D_meaning" #lossなんてキーはないと言われたので
 
 
 @dataclasses.dataclass
