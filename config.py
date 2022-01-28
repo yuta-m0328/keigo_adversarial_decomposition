@@ -55,7 +55,7 @@ class PreprocessConfig:
     nb_style_dims_sentences: int = 50000
     style_tokens_proportion: float = 0.2
 
-    # test_size: int = 1000
-    # val_size: int = 1000
-    test_size: int = 2
-    val_size: int = 2
+    test_size: int = 20
+    val_size: int = 20
+    # test_size: int = 2
+    # val_size: int = 2

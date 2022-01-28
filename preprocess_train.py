@@ -155,6 +155,7 @@ class LossAggregatorMetric(Metric):
 
 
 def log_progress(epoch, iteration, losses, mode='train', tensorboard_writer=None, use_iteration=False):
+    # print("function log_progress executed")
     if not use_iteration:
         losses_str = [
                 f'{name}: {val:.3f}'
@@ -242,6 +243,8 @@ def main(preprocess_cfg, train_cfg):
 
         best_loss = np.inf
 
+        print("preprocess completed")
+
         @trainer.on(Events.ITERATION_COMPLETED)
         def log_training_iter(engine):
             losses_train = engine.state.output
@@ -264,12 +267,12 @@ def main(preprocess_cfg, train_cfg):
                 best_loss = losses_val[exp.config.best_loss]
                 save_weights(model, exp.experiment_dir.joinpath('best.th'))
 
-            tensorboard_dir = exp.experiment_dir.joinpath('log')
-            tensorboard_writer = SummaryWriter(str(tensorboard_dir))
+        tensorboard_dir = exp.experiment_dir.joinpath('log')
+        tensorboard_writer = SummaryWriter(str(tensorboard_dir))
 
-            trainer.run(data_loader_train, max_epochs=exp.config.num_epochs)
+        trainer.run(data_loader_train, max_epochs=exp.config.num_epochs)
 
-            print(f'Experiment finished: {exp.experiment_id}')
+        print(f'Experiment finished: {exp.experiment_id}')
 
 
 
