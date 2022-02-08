@@ -147,10 +147,10 @@ class Seq2Seq(torch.nn.Module):
     def encode(self, inputs):
         # shape: (batch_size, sequence_len)
         sentence = inputs['sentence']
-
+        # print("s:",sentence)
         # shape: (batch_size, )
         lengths = get_sequences_lengths(sentence)
-
+        # print("length:",lengths)
         # shape: (batch_size, sequence_len, embedding_size)
         sentence_emb = self.embedding(sentence)
 

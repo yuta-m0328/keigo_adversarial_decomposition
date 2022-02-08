@@ -240,7 +240,6 @@ def main(preprocess_cfg, train_cfg):
         metrics = {'loss': LossAggregatorMetric(), }
         for metric_name, metric in metrics.items():
             metric.attach(evaluator, metric_name)
-
         best_loss = np.inf
 
         print("preprocess completed")
@@ -259,10 +258,11 @@ def main(preprocess_cfg, train_cfg):
 
             evaluator.run(data_loader_val)
             losses_val = evaluator.state.metrics['loss']
-
             # log_progress(trainer.state.epoch, trainer.state.iteration, losses_train, 'train', tensorboard_writer)
             log_progress(trainer.state.epoch, trainer.state.iteration, losses_val, 'val', tensorboard_writer)
-
+            # print(losses_val)
+            # print(exp.config.best_loss)
+            # print("best:",best_loss)
             if losses_val[exp.config.best_loss] < best_loss:
                 best_loss = losses_val[exp.config.best_loss]
                 save_weights(model, exp.experiment_dir.joinpath('best.th'))
