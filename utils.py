@@ -29,7 +29,8 @@ def load_json(filename):
 
 def save_pickle(obj, filename):
     with open(filename, 'wb') as f:
-        pickle.dump(str(obj), f)
+        pickle.dump(obj,f)
+        # pickle.dump(str(obj), f)
         # print("checkpoint1")
         # print(f'obj:{obj}')
         # print(f'obj type:{type(obj)}')
@@ -181,7 +182,9 @@ def create_embeddings_matrix(word_embeddings, vocab):
 
     special_tokens[Vocab.PAD_TOKEN] = np.zeros((embedding_size,))
     nb_unk = 0
-    keys = [key for key,value in word_embeddings] #magnitude
+    # keys = [key for key,value in word_embeddings] #magnitude
+    with open("data/magnitude_keys","rb") as f:
+        keys = pickle.load(f)
     for i, t in vocab.id2token.items():
         # print(i,t)
         if t in special_tokens:
@@ -190,7 +193,8 @@ def create_embeddings_matrix(word_embeddings, vocab):
             # if t in word_embeddings:
                 # W_emb[i] = word_embeddings[t] #gensim
                 # print(f"utils.py c_matrix => word_embeddings[t] : {word_embeddings[t]}")
-            if t.text in keys: #magnitude
+            #if t.text in keys: #magnitude
+            if t in keys: #spacy要素を排除
                 W_emb[i] = word_embeddings[i][1] #magnitude
             else:
                 W_emb[i] = np.random.uniform(-0.3, 0.3, embedding_size)
