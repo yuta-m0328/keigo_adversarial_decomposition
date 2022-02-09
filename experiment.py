@@ -29,6 +29,7 @@ class Experiment(object):
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
+        Experiment._save_config(self.config, self.experiment_dir)
         pass
 
     @classmethod

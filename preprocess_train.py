@@ -36,16 +36,16 @@ from vocab import Vocab
 # preprocess.py
 
 def save_dataset(exp, dataset_train, dataset_val, dataset_test, vocab, style_vocab, W_emb):
-    # save_pickle((dataset_train, dataset_val, dataset_test), exp.experiment_dir.joinpath('datasets.pkl'))
-    # save_pickle((vocab, style_vocab), exp.experiment_dir.joinpath('vocabs.pkl'))
+    save_pickle((dataset_train, dataset_val, dataset_test), exp.experiment_dir.joinpath('datasets.pkl'))
+    save_pickle((vocab, style_vocab), exp.experiment_dir.joinpath('vocabs.pkl'))
     save_pickle(W_emb, exp.experiment_dir.joinpath('W_emb.pkl'))
 
     print(f'Saved: {exp.experiment_dir}')
 
 
 def load_dataset(exp):
-    # dataset_train, dataset_val, dataset_test = load_pickle(exp.experiment_dir.joinpath('datasets.pkl'))
-    # vocab, style_vocab = load_pickle(exp.experiment_dir.joinpath('vocabs.pkl'))
+    dataset_train, dataset_val, dataset_test = load_pickle(exp.experiment_dir.joinpath('datasets.pkl'))
+    vocab, style_vocab = load_pickle(exp.experiment_dir.joinpath('vocabs.pkl'))
     W_emb = load_pickle(exp.experiment_dir.joinpath('W_emb.pkl'))
 
     return dataset_train, dataset_val, dataset_test, vocab, style_vocab, W_emb
@@ -217,10 +217,11 @@ def main(preprocess_cfg, train_cfg):
         save_dataset(exp, dataset_train, dataset_val, dataset_test, vocab, style_vocab, W_emb)
 
         print(f'Experiment finished: {exp.experiment_id}')
-
+        # exp.config.preprocess_exp_id = exp.experiment_id
+        preprocess_id = exp.experiment_id
     with Experiment(EXPERIMENTS_DIR, train_cfg, prefix='train') as exp:
         print(f'Experiment started: {exp.experiment_id}')
-
+        exp.config.preprocess_exp_id = preprocess_id
         #preprocessとtrainをまとめてるからこれはいらない
         # preprocess_exp = Experiment.load(EXPERIMENTS_DIR, exp.config.preprocess_exp_id)
         # dataset_train, dataset_val, dataset_test, vocab, style_vocab, W_emb = load_dataset(preprocess_exp)
@@ -230,7 +231,6 @@ def main(preprocess_cfg, train_cfg):
         print(f'Data loader : {len(data_loader_train)}, {len(data_loader_val)}')
 
         model = create_model(exp.config, vocab, style_vocab, dataset_train.max_len, W_emb)
-
         update_function_train, update_function_eval = create_update_function(exp.config, model)
 
         trainer = Engine(update_function_train)

@@ -32,8 +32,8 @@ class JaSentenceStyleDatasetReader(object):
         return sentence_cleaned
 
     def preprocess_sentence(self, sentence):
-        sentence = [token for token in sentence]
-
+        # sentence = [token for token in sentence]
+        sentence = [token.text for token in sentence]
         # cut to max len -1 for the END token
         sentence = sentence[:self.max_len - 1]
 
