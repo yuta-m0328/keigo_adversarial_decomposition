@@ -155,6 +155,7 @@ class LossAggregatorMetric(Metric):
 
 
 def log_progress(epoch, iteration, losses, mode='train', tensorboard_writer=None, use_iteration=False):
+    # print("function log_progress executed")
     if not use_iteration:
         losses_str = [
                 f'{name}: {val:.3f}'
@@ -240,6 +241,8 @@ def main(preprocess_cfg, train_cfg):
         for metric_name, metric in metrics.items():
             metric.attach(evaluator, metric_name)
         best_loss = np.inf
+
+        print("preprocess completed")
 
         @trainer.on(Events.ITERATION_COMPLETED)
         def log_training_iter(engine):
