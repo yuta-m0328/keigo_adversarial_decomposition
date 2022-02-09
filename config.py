@@ -35,9 +35,9 @@ class TrainConfig:
     use_motivator: bool = True
     use_gauss: bool = False
 
-    num_epochs: int = 50
+    num_epochs: int = 32
     # batch_size: int = 2
-    batch_size: int = 8
+    batch_size: int = 32
     best_loss: str = 'loss'
     # best_loss: str = "loss_D_meaning" #lossなんてキーはないと言われたので 追記データ数がそれなりにあるとlossが生える
 
@@ -57,7 +57,7 @@ class PreprocessConfig:
     nb_style_dims_sentences: int = 50000
     style_tokens_proportion: float = 0.2
 
-    test_size: int = 100
-    val_size: int = 100
+    test_size: int = 1000
+    val_size: int = 1000
     # test_size: int = 20
     # val_size: int = 20

@@ -204,7 +204,11 @@ class SentenceStyleDataset(torch.utils.data.Dataset):
         sentence, style = instance['sentence'], instance['style']
 
         sentence = self.pad_sentence(sentence)
-        sentence_enc = np.array([self.vocab.get(t, Vocab.UNK_TOKEN) for t in sentence], dtype=np.long)
+        # sentence_enc = np.array([], dtype=np.long)
+        # for t in sentence:
+        #     if t != '<unk>':
+        #         np.append(sentence_enc, self.vocab.get(t, Vocab.UNK_TOKEN))
+        sentence_enc = np.array([self.vocab.get(t, Vocab.UNK_TOKEN) for t in sentence if type(self.vocab.get(t, Vocab.UNK_TOKEN)) == int], dtype=np.long)
 
         style_enc = self.style_vocab[style]
 
