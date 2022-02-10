@@ -21,7 +21,7 @@ class TrainConfig:
     meaning_size: int = 128
     style_size: int = 128
 
-    lr: float = 0.001
+    lr: float = 0.003
     weight_decay: float = 0.0000001
     grad_clipping: float = 5
 
