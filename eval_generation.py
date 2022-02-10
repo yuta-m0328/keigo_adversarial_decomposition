@@ -221,7 +221,7 @@ def t_SNE_visualization(dataset_train, dataset_val, dataset_reader, style_vocab,
         plt.savefig(path, format='png', bbox_inches = 'tight')
 
 def main():
-    exp_id ='./train.ssc8w7sr' # edit id
+    exp_id ='./train.fak10fhb' # edit id
     
     exp = Experiment.load(EXPERIMENTS_DIR, exp_id)
     print(exp.config.preprocess_exp_id)
