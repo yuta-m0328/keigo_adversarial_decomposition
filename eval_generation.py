@@ -221,7 +221,7 @@ def t_SNE_visualization(dataset_train, dataset_val, dataset_reader, style_vocab,
         plt.savefig(path, format='png', bbox_inches = 'tight')
 
 def main():
-    exp_id ='./train.fak10fhb' # edit id
+    exp_id ='./train.izi1kk0q' # edit id
     
     exp = Experiment.load(EXPERIMENTS_DIR, exp_id)
     print(exp.config.preprocess_exp_id)
@@ -241,9 +241,9 @@ def main():
 
     swap_style(style_vocab, dataset_val, 10)
     
-    swap(dataset_train, dataset_val, dataset_reader, vocab, style_vocab, model, 100, 200)
+    swap(dataset_train, dataset_val, dataset_reader, vocab, style_vocab, model, 1000, 2000)
 
-    t_SNE_visualization(dataset_train, dataset_val, dataset_reader, style_vocab, model, 1000, 'practice_form_embeddings.png')
+    t_SNE_visualization(dataset_train, dataset_val, dataset_reader, style_vocab, model, 100, 'keigo_form_embeddings.png')
 
 
 if __name__ == '__main__':
