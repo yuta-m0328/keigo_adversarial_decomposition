@@ -243,7 +243,7 @@ def main():
     
     swap(dataset_train, dataset_val, dataset_reader, vocab, style_vocab, model, 1000, 2000)
 
-    t_SNE_visualization(dataset_train, dataset_val, dataset_reader, style_vocab, model, 100, 'keigo_form_embeddings.png')
+    t_SNE_visualization(dataset_train, dataset_val, dataset_reader, style_vocab, model, 250, 'keigo_form_embeddings.png')
 
 
 if __name__ == '__main__':
