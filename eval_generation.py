@@ -237,13 +237,13 @@ def main():
 
     model = model.eval()
 
-    show_sentence(100 ,model, dataset_train, dataset_val, dataset_reader, vocab, style_vocab)
+    show_sentence(1 ,model, dataset_train, dataset_val, dataset_reader, vocab, style_vocab)
 
-    swap_style(style_vocab, dataset_val, 10)
+    swap_style(style_vocab, dataset_val, 5)
     
-    swap(dataset_train, dataset_val, dataset_reader, vocab, style_vocab, model, 1000, 2000)
+    swap(dataset_train, dataset_val, dataset_reader, vocab, style_vocab, model, 500, 501)
 
-    t_SNE_visualization(dataset_train, dataset_val, dataset_reader, style_vocab, model, 250, 'keigo_form_embeddings.png')
+    t_SNE_visualization(dataset_train, dataset_val, dataset_reader, style_vocab, model, 400, 'keigo_form_embeddings.png')
 
 
 if __name__ == '__main__':
