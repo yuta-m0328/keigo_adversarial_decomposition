@@ -180,6 +180,7 @@ def t_SNE_visualization(dataset_train, dataset_val, dataset_reader, style_vocab,
     for sentence in df[1]:
         if sentence != '<unk>':
             inputs_features.append(create_inputs(sentence, dataset_train, dataset_reader, style_vocab))
+    print(inputs_features[:5])
     # inputs_features = [create_inputs(sentence, dataset_train, dataset_reader, style_vocab) for sentence in df[1]]
     # outputs_features = []
     # for line in inputs_features:
@@ -187,6 +188,7 @@ def t_SNE_visualization(dataset_train, dataset_val, dataset_reader, style_vocab,
     #     outputs_features.append(outputs)
     #     line = Variable(line, volatile=True)
     outputs_features = [model(line) for line in inputs_features]
+    print(outputs_features[0])
     
     # style_embedを抽出する
     style_embed = [line['style_hidden'].to('cpu').detach().numpy().copy() for line  in outputs_features]
@@ -201,24 +203,25 @@ def t_SNE_visualization(dataset_train, dataset_val, dataset_reader, style_vocab,
 
     # ndarrayからcsr?matrixへの変換
     style_embed_csr =csr_matrix(style_embeds_sq)
-    tsne = TSNE(n_components=2, random_state = 0, perplexity = 30, n_iter = 1000)
-    X_style = tsne.fit_transform(style_embeds_sq)
-    ddf = pd.concat([df, pd.DataFrame(X_style, columns = ['col1', 'col2'])], axis = 1)
-    gold_list = ddf[0].unique()
-    print('gold_listの中身です')
-    print(gold_list)
+    for n_iter in [250, 400, 500, 750, 1000, 2000]:
+        tsne = TSNE(n_components=2, random_state = 0, perplexity = 30, n_iter = n_iter)
+        X_style = tsne.fit_transform(style_embeds_sq)
+        ddf = pd.concat([df, pd.DataFrame(X_style, columns = ['col1', 'col2'])], axis = 1)
+        gold_list = ddf[0].unique()
+        print('gold_listの中身です')
+        print(gold_list)
 
-    # 可視化
-    colors =  ["r", "g"]
-    plt.figure(figsize = (30, 30))
-    for i , v in enumerate(gold_list):
-        tmp_df = ddf[ddf[0] == v]
-        plt.scatter(tmp_df['col1'],  
-                    tmp_df['col2'],
-                    label = v,
-                    color = colors[i])
-        plt.legend(fontsize = 30)
-        plt.savefig(path, format='png', bbox_inches = 'tight')
+        # 可視化
+        colors =  ["r", "g"]
+        plt.figure(figsize = (30, 30))
+        for i , v in enumerate(gold_list):
+            tmp_df = ddf[ddf[0] == v]
+            plt.scatter(tmp_df['col1'],  
+                        tmp_df['col2'],
+                        label = v,
+                        color = colors[i])
+            plt.legend(fontsize = 30)
+            plt.savefig(str(n_iter) + path, format='png', bbox_inches = 'tight')
 
 def main():
     exp_id ='./train.izi1kk0q' # edit id
