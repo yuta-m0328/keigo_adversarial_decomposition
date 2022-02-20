@@ -203,7 +203,7 @@ def t_SNE_visualization(dataset_train, dataset_val, dataset_reader, style_vocab,
 
     # ndarrayからcsr?matrixへの変換
     style_embed_csr =csr_matrix(style_embeds_sq)
-    for n_iter in [250, 300, 350, 400]:
+    for n_iter in [260, 270, 280, 290]:
         tsne = TSNE(n_components=2, random_state = 0, perplexity = 30, n_iter = n_iter)
         X_style = tsne.fit_transform(style_embeds_sq)
         ddf = pd.concat([df, pd.DataFrame(X_style, columns = ['col1', 'col2'])], axis = 1)
