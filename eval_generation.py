@@ -155,12 +155,12 @@ def swap(dataset_train, dataset_val, dataset_reader, vocab, style_vocab, model, 
     print(' '.join(swaped_sentences[1]))
     print()
 
-def t_SNE_visualization(dataset_train, dataset_val, dataset_reader, style_vocab, model, num, path):
+def t_SNE_visualization(dataset_train, dataset_val, dataset_reader, style_vocab, model, from_num, to_num, path):
     print('関数t_SNE_visualizationを実行します')
     # sentence listを作成する
-    sentences = [" ".join(line['sentence']) for line  in dataset_val.instances[:num]]
+    sentences = [" ".join(line['sentence']) for line  in dataset_val.instances[from_num:to_num]]
     # gold(style) label listを作成する
-    gold = [line['style'] for line  in dataset_val.instances[:num]]
+    gold = [line['style'] for line  in dataset_val.instances[from_num:to_num]]
 
     # sentences = []
     # gold = []
@@ -203,7 +203,7 @@ def t_SNE_visualization(dataset_train, dataset_val, dataset_reader, style_vocab,
 
     # ndarrayからcsr?matrixへの変換
     style_embed_csr =csr_matrix(style_embeds_sq)
-    for n_iter in [250,]:
+    for n_iter in [250, 500, 1000]:
         tsne = TSNE(n_components=2, random_state = 0, perplexity = 30, n_iter = n_iter)
         X_style = tsne.fit_transform(style_embeds_sq)
         ddf = pd.concat([df, pd.DataFrame(X_style, columns = ['col1', 'col2'])], axis = 1)
@@ -240,13 +240,13 @@ def main():
 
     model = model.eval()
 
-    show_sentence(1 ,model, dataset_train, dataset_val, dataset_reader, vocab, style_vocab)
+    show_sentence(2 ,model, dataset_train, dataset_val, dataset_reader, vocab, style_vocab)
 
     swap_style(style_vocab, dataset_val, 5)
     
-    swap(dataset_train, dataset_val, dataset_reader, vocab, style_vocab, model, 500, 501)
+    swap(dataset_train, dataset_val, dataset_reader, vocab, style_vocab, model, 1000, 1001)
 
-    t_SNE_visualization(dataset_train, dataset_val, dataset_reader, style_vocab, model, 450, 'keigo_form_embeddings.png')
+    t_SNE_visualization(dataset_train, dataset_val, dataset_reader, style_vocab, model, 1000, 1450, 'keigo_form_embeddings.png')
 
 
 if __name__ == '__main__':
