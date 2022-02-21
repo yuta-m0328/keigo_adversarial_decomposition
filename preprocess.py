@@ -100,7 +100,7 @@ def main(cfg):
         # create embeddings
         word_embeddings = load_embeddings(cfg)
         print("magnituideのロード完了")
-        W_emb = create_embeddings_matrix(word_embeddings, vocab)
+        W_emb = create_embeddings_matrix(word_embeddings, vocab,cfg)
         # extract style dimensions
         style_dimensions = extract_word_embeddings_style_dimensions(cfg, instances_train, vocab, style_vocab, W_emb)
 

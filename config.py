@@ -9,19 +9,20 @@ from settings import SHAKESPEARE_DATASET_DIR, YELP_DATASET_DIR, KEIGO_DATASET_DI
 @dataclasses.dataclass
 class TrainConfig:
     model_class: type = Seq2SeqMeaningStyle
-    preprocess_exp_id: str = 'preprocess.ky0frhsy'  # Shakespeare: xxx | Yelp: 2p089c54
+     
+    preprocess_exp_id: str = 'preprocess.u5wf47v3'  # Shakespeare: xxx | Yelp: d785lil4
 
     embedding_size: int = 300
     hidden_size: int = 256
     dropout: float = 0.2
     scheduled_sampling_ratio: float = 0.5
     pretrained_embeddings: bool = True
-    trainable_embeddings: bool = False
+    trainable_embeddings: bool = True
 
     meaning_size: int = 128
     style_size: int = 128
 
-    lr: float = 0.001
+    lr: float = 0.005
     weight_decay: float = 0.0000001
     grad_clipping: float = 5
 
@@ -30,14 +31,16 @@ class TrainConfig:
     P_loss_multiplier: float = 10
     P_bow_loss_multiplier: float = 1
     use_discriminator: bool = True
-    use_predictor: bool = False
+    use_predictor: bool = True
     use_predictor_bow: bool = True
     use_motivator: bool = True
-    use_gauss: bool = False
+    use_gauss: bool = True
 
-    num_epochs: int = 500
+
+    num_epochs: int = 100
     # batch_size: int = 2
-    batch_size: int = 32
+    batch_size: int = 64
+
     best_loss: str = 'loss'
     # best_loss: str = "loss_D_meaning" #lossなんてキーはないと言われたので 追記データ数がそれなりにあるとlossが生える
 
@@ -50,14 +53,16 @@ class PreprocessConfig:
     min_len: int = 3
     max_len: int = 20
     lowercase: bool = True
-    word_embeddings: str = 'gensim'
+    word_embeddings: str = 'magnitude'
+    # word_embeddings: str = 'glove'
     max_vocab_size: int = 50000
 
     nb_style_dims: int = 50
     nb_style_dims_sentences: int = 50000
     style_tokens_proportion: float = 0.2
 
-    test_size: int = 10000
-    val_size: int = 10000
-    # test_size: int = 20
-    # val_size: int = 20
+
+    # test_size: int = 10000
+    # val_size: int = 10000
+    test_size: int = 5000
+    val_size: int = 5000

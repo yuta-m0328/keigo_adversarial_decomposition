@@ -3,6 +3,7 @@ import csv
 import dataclasses
 import itertools
 import re
+from tqdm import tqdm
 
 import spacy
 import numpy as np
@@ -42,7 +43,7 @@ class JaSentenceStyleDatasetReader(object):
     def read(self, data_path):
         samples = []
 
-        for sentence, style in self._read(data_path):
+        for sentence, style in tqdm(self._read(data_path)):
             sentence = self.clean_sentence(sentence)
             sentence = self.spacy(sentence)
             sentence = self.preprocess_sentence(sentence)
@@ -84,7 +85,8 @@ class SentenceStyleDatasetReader(object):
 
         disable = ['vectors', 'textcat', 'tagger', 'parser', 'ner']
         self.spacy = spacy.load('en_core_web_lg', disable=disable)
-        self.spacy.add_pipe(self.spacy.create_pipe('sentencizer'))
+        # self.spacy.add_pipe(self.spacy.create_pipe('sentencizer'))
+        self.spacy.add_pipe('sentencizer')
 
     @abc.abstractmethod
     def _read(self, data_path):
@@ -109,7 +111,7 @@ class SentenceStyleDatasetReader(object):
             for token in sentence
             if not token.is_space
         ]
-
+        # sentence = [token.text for token in sentence] #spacy→text
         # cut to max len -1 for the END token
         sentence = sentence[:self.max_len - 1]
 
@@ -118,7 +120,7 @@ class SentenceStyleDatasetReader(object):
     def read(self, data_path):
         samples = []
 
-        for sentence, style in self._read(data_path):
+        for sentence, style in tqdm(self._read(data_path)):
             sentence = self.clean_sentence(sentence)
             sentence = self.spacy(sentence)
             sentence = self.preprocess_sentence(sentence)
