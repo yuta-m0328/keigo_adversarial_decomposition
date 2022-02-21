@@ -41,7 +41,7 @@ class Vocab(object):
 
     def prune_vocab(self, max_size):
         nb_tokens_before = len(self.token2id)
-
+        print(f"max_size:{max_size}")
         tokens_all = set(self.token2id.keys())
         tokens_most_common = set(t for t, c in self.token_counts.most_common(max_size))
         tokens_special = set(self.special_tokens)
@@ -60,7 +60,7 @@ class Vocab(object):
 
         nb_tokens_after = len(self.token2id)
 
-        # print(f'Vocab pruned: {nb_tokens_before} -> {nb_tokens_after}')
+        print(f'Vocab pruned: {nb_tokens_before} -> {nb_tokens_after}')
         # print(f'token2id : {self.token2id}')
 
     def _rebuild_id2token(self):

@@ -4,7 +4,8 @@ import pickle
 import joblib
 import dill
 import re
-
+from tqdm import tqdm
+import os
 import numpy as np
 import torch
 
@@ -151,9 +152,12 @@ def get_sequences_lengths(sequences, masking=0, dim=1):
 
 def load_embeddings(cfg):
     word_embeddings_filename = WORD_EMBEDDINGS_FILENAMES[cfg.word_embeddings]
+    print("WE:",cfg.word_embeddings)
     if cfg.word_embeddings == 'gensim':
         print(f"use {cfg.word_embeddings} word embeddings.")
-        # word_embeddings = gensim.models.KeyedVectors.load_word2vec_format(word_embeddings_filename, binary=False)
+        word_embeddings = gensim.models.KeyedVectors.load_word2vec_format(word_embeddings_filename, binary=False)
+    elif cfg.word_embeddings == 'magnitude' or cfg.word_embeddings == 'glove':
+        print(f"use {cfg.word_embeddings} word embeddings.")
         word_embeddings  = Magnitude(word_embeddings_filename)
     else:
         word_embeddings = load_pickle(word_embeddings_filename)
@@ -162,13 +166,25 @@ def load_embeddings(cfg):
     return word_embeddings
 
 
-def create_embeddings_matrix(word_embeddings, vocab):
+def create_embeddings_matrix(word_embeddings, vocab,cfg):
     # print(word_embeddings)
     #　ここは埋め込みサイズ(=300次元)がわかればいい
     # embedding_size = word_embeddings[list(word_embeddings.keys())[0]].shape[0]
-    # embedding_size = word_embeddings.vector_size #gensim
-    embedding_size = word_embeddings[0][1].shape[0] #magnitude
-    # print(f"utils.py word_embeddings v")
+    if cfg.word_embeddings == 'gensim':
+        embedding_size = word_embeddings.vector_size #gensim
+    elif cfg.word_embeddings == 'magnitude' or cfg.word_embeddings == 'glove':
+        embedding_size = word_embeddings[0][1].shape[0] #magnitude
+        if not os.path.exists(f"data/{cfg.word_embeddings}_magnitude_word2idx.pkl"):
+            word2idx=dict() #単語→magnitudeのIDへの変換辞書
+            for i, (key,value) in tqdm(enumerate(word_embeddings),total=len(word_embeddings)):
+                word2idx[key] = i #magnitudeのqueryingが遅いので辞書で持っておく
+            with open(f"data/{cfg.word_embeddings}_magnitude_word2idx.pkl","wb") as f:
+                pickle.dump(word2idx,f)
+        with open(f"data/{cfg.word_embeddings}_magnitude_word2idx.pkl","rb") as f:
+            word2idx = pickle.load(f)
+    else:
+        embedding_size = word_embeddings[list(word_embeddings.keys())[0]].shape[0]
+    print(f"utils.py word_embeddings v")
     # print(word_embeddings)
 
     W_emb = np.zeros((len(vocab), embedding_size), dtype=np.float32)
@@ -182,25 +198,34 @@ def create_embeddings_matrix(word_embeddings, vocab):
 
     special_tokens[Vocab.PAD_TOKEN] = np.zeros((embedding_size,))
     nb_unk = 0
-    # keys = [key for key,value in word_embeddings] #magnitude
-    with open("data/magnitude_keys","rb") as f:
-        keys = pickle.load(f)
-    for i, t in vocab.id2token.items():
+
+    # with open("data/magnitude_keys.pkl","rb") as f:
+    #     keys = pickle.load(f)
+    for i, t in tqdm(vocab.id2token.items()):
         # print(i,t)
         if t in special_tokens:
             W_emb[i] = special_tokens[t]
         else:
-            # if t in word_embeddings:
-                # W_emb[i] = word_embeddings[t] #gensim
-                # print(f"utils.py c_matrix => word_embeddings[t] : {word_embeddings[t]}")
-            #if t.text in keys: #magnitude
-            if t in keys: #spacy要素を排除
-                W_emb[i] = word_embeddings[i][1] #magnitude
-            else:
-                W_emb[i] = np.random.uniform(-0.3, 0.3, embedding_size)
-                nb_unk += 1
+            if cfg.word_embeddings == 'gensim' or cfg.word_embeddings == 'fast_text':
+                if t in word_embeddings:
+                    W_emb[i] = word_embeddings[t] #gensim
+                    # print(f"utils.py c_matrix => word_embeddings[t] : {word_embeddings[t]}")
+                else:
+                    W_emb[i] = np.random.uniform(-0.3, 0.3, embedding_size)
+                    nb_unk += 1
+            if cfg.word_embeddings == 'magnitude' or cfg.word_embeddings == 'glove':
+                if t in word2idx.keys(): #spacy要素を排除
+                    # print(word_embeddings[i])
+                    # W_emb[i] = word_embeddings[i][1] #magnitude
+                    magnitude_idx = word2idx[t]
+                    assert t == word_embeddings[magnitude_idx][0],"単語とmagnitudeの単語ベクトルが一致していません"
+                    W_emb[i] = word_embeddings[magnitude_idx][1]
+                else:
+                    # W_emb[i] = np.random.uniform(-0.3, 0.3, embedding_size)
+                    W_emb[i] = word_embeddings.query(t)
+                    nb_unk += 1
 
-    # print(f'Nb unk: {nb_unk}')
+    print(f'Nb unk: {nb_unk}')
     # print(f'W_emb vvv')
     # print(W_emb)
 

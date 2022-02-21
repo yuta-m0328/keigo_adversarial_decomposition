@@ -189,15 +189,16 @@ def main(preprocess_cfg, train_cfg):
 
         if exp.config.max_vocab_size != 0:
             vocab.prune_vocab(exp.config.max_vocab_size)
-
+            print(f"after prune:{len(vocab)}")
         # create splits
         instances_train, instances_val, instances_test = create_splits(exp.config, instances)
         print(f'Train: {len(instances_train)}, val: {len(instances_val)}, test: {len(instances_test)}')
 
         # create embeddings
         word_embeddings = load_embeddings(preprocess_cfg)
-        W_emb = create_embeddings_matrix(word_embeddings, vocab)
-
+        print("単語埋め込みロード完了")
+        W_emb = create_embeddings_matrix(word_embeddings, vocab, preprocess_cfg)
+        print("単語埋め込み行列作成完了")
         # extract style dimensions
         style_dimensions = extract_word_embeddings_style_dimensions(preprocess_cfg, instances_train, vocab, style_vocab, W_emb)
 
