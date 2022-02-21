@@ -6,7 +6,7 @@ EXPERIMENTS_DIR = DATA_DIR.joinpath('experiments/')
 SHAKESPEARE_DATASET_DIR = DATA_DIR.joinpath('datasets/shakespeare/data/align/plays/merged/')
 YELP_DATASET_DIR = DATA_DIR.joinpath('datasets/yelp/data/yelp')
 # KEIGO_DATASET_DIR = DATA_DIR.joinpath('datasets/keigo/practice_addecom_datasets')
-KEIGO_DATASET_DIR = DATA_DIR.joinpath('datasets/keigo/practice_100k_mecab')
+KEIGO_DATASET_DIR = DATA_DIR.joinpath('datasets/keigo/addecom_datasets')
 
 WORD_EMBEDDINGS_FILENAMES = dict(
     # glove=DATA_DIR.joinpath('word_embeddings/glove.840B.300d.pickled'),

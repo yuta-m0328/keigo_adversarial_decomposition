@@ -9,6 +9,7 @@ from settings import SHAKESPEARE_DATASET_DIR, YELP_DATASET_DIR, KEIGO_DATASET_DI
 @dataclasses.dataclass
 class TrainConfig:
     model_class: type = Seq2SeqMeaningStyle
+     
     preprocess_exp_id: str = 'preprocess.u5wf47v3'  # Shakespeare: xxx | Yelp: d785lil4
 
     embedding_size: int = 300
@@ -35,9 +36,11 @@ class TrainConfig:
     use_motivator: bool = True
     use_gauss: bool = True
 
+
     num_epochs: int = 100
     # batch_size: int = 2
     batch_size: int = 64
+
     best_loss: str = 'loss'
     # best_loss: str = "loss_D_meaning" #lossなんてキーはないと言われたので 追記データ数がそれなりにあるとlossが生える
 
@@ -57,6 +60,7 @@ class PreprocessConfig:
     nb_style_dims: int = 50
     nb_style_dims_sentences: int = 50000
     style_tokens_proportion: float = 0.2
+
 
     # test_size: int = 10000
     # val_size: int = 10000
