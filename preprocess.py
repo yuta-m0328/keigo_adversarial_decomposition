@@ -11,27 +11,31 @@ from vocab import Vocab
 
 
 def save_dataset(exp, dataset_train, dataset_val, dataset_test, vocab, style_vocab, W_emb):
-    # save_pickle((dataset_train, dataset_val, dataset_test), exp.experiment_dir.joinpath('datasets.pkl'))
-    # save_pickle((vocab, style_vocab), exp.experiment_dir.joinpath('vocabs.pkl'))
-    # save_pickle(W_emb, exp.experiment_dir.joinpath('W_emb.pkl'))
-
-    save_pickle(dataset_train, exp.experiment_dir.joinpath('datasets1.pkl'))
-    save_pickle(dataset_val, exp.experiment_dir.joinpath('datasets2.pkl'))
-    save_pickle(dataset_test, exp.experiment_dir.joinpath('datasets3.pkl'))
-    save_pickle(vocab, exp.experiment_dir.joinpath('vocabs1.pkl'))
-    save_pickle(style_vocab, exp.experiment_dir.joinpath('vocabs2.pkl'))
+    save_pickle((dataset_train, dataset_val, dataset_test), exp.experiment_dir.joinpath('datasets.pkl'))
+    save_pickle((vocab, style_vocab), exp.experiment_dir.joinpath('vocabs.pkl'))
     save_pickle(W_emb, exp.experiment_dir.joinpath('W_emb.pkl'))
+
+    # save_pickle(dataset_train, exp.experiment_dir.joinpath('datasets1.pkl'))
+    # save_pickle(dataset_val, exp.experiment_dir.joinpath('datasets2.pkl'))
+    # save_pickle(dataset_test, exp.experiment_dir.joinpath('datasets3.pkl'))
+    # save_pickle(vocab, exp.experiment_dir.joinpath('vocabs1.pkl'))
+    # save_pickle(style_vocab, exp.experiment_dir.joinpath('vocabs2.pkl'))
+    # save_pickle(W_emb, exp.experiment_dir.joinpath('W_emb.pkl'))
 
     print(f'Saved: {exp.experiment_dir}')
 
 
 def load_dataset(exp):
-    dataset_train = eval(load_pickle(exp.experiment_dir.joinpath('datasets1.pkl')))
-    dataset_val = eval(load_pickle(exp.experiment_dir.joinpath('datasets2.pkl')))
-    dataset_test = eval(load_pickle(exp.experiment_dir.joinpath('datasets3.pkl')))
-    vocab = eval(load_pickle(exp.experiment_dir.joinpath('vocabs1.pkl')))
-    style_vocab = eval(load_pickle(exp.experiment_dir.joinpath('vocabs2.pkl')))
-    W_emb = eval(load_pickle(exp.experiment_dir.joinpath('W_emb.pkl')))
+    dataset_train, dataset_val, dataset_test = load_pickle(exp.experiment_dir.joinpath('datasets.pkl'))
+    vocab, style_vocab = load_pickle(exp.experiment_dir.joinpath('vocabs.pkl'))
+    W_emb = load_pickle(exp.experiment_dir.joinpath('W_emb.pkl'))
+
+    # dataset_train = eval(load_pickle(exp.experiment_dir.joinpath('datasets1.pkl')))
+    # dataset_val = eval(load_pickle(exp.experiment_dir.joinpath('datasets2.pkl')))
+    # dataset_test = eval(load_pickle(exp.experiment_dir.joinpath('datasets3.pkl')))
+    # vocab = eval(load_pickle(exp.experiment_dir.joinpath('vocabs1.pkl')))
+    # style_vocab = eval(load_pickle(exp.experiment_dir.joinpath('vocabs2.pkl')))
+    # W_emb = eval(load_pickle(exp.experiment_dir.joinpath('W_emb.pkl')))
 
     print(f'Dataset: {len(dataset_train)}, val: {len(dataset_val)}, test: {len(dataset_test)}')
     print(f'Vocab: {len(vocab)}, style vocab: {len(style_vocab)}')
@@ -103,7 +107,7 @@ def main(cfg):
         W_emb = create_embeddings_matrix(word_embeddings, vocab,cfg)
         # extract style dimensions
         style_dimensions = extract_word_embeddings_style_dimensions(cfg, instances_train, vocab, style_vocab, W_emb)
-
+        # print(vocab.token2id)
         # create datasets
         dataset_train = MeaningEmbeddingSentenceStyleDataset(
             W_emb, style_dimensions, exp.config.style_tokens_proportion,
@@ -119,7 +123,7 @@ def main(cfg):
         )
 
         save_dataset(exp, dataset_train, dataset_val, dataset_test, vocab, style_vocab, W_emb)
-
+        print(f'config:{exp.config}')
         print(f'Experiment finished: {exp.experiment_id}')
 
 

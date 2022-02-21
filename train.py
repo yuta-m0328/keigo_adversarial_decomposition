@@ -11,7 +11,7 @@ from tensorboardX import SummaryWriter
 from config import TrainConfig
 from experiment import Experiment
 from models import Seq2Seq, Seq2SeqMeaningStyle, StyleClassifier
-from preprocess import load_dataset
+from preprocess_train import load_dataset
 from settings import EXPERIMENTS_DIR
 from update_functions import Seq2SeqUpdateFunction, StyleClassifierUpdateFunction, Seq2SeqMeaningStyleUpdateFunction
 from utils import to_device, save_weights, init_weights
@@ -105,7 +105,7 @@ def log_progress(epoch, iteration, losses, mode='train', tensorboard_writer=None
 def main(cfg):
     with Experiment(EXPERIMENTS_DIR, cfg, prefix='train') as exp:
         print(f'Experiment started: {exp.experiment_id}')
-
+        print(f'confif:{exp.config}')
         preprocess_exp = Experiment.load(EXPERIMENTS_DIR, exp.config.preprocess_exp_id)
         dataset_train, dataset_val, dataset_test, vocab, style_vocab, W_emb = load_dataset(preprocess_exp)
 

@@ -206,8 +206,8 @@ class SentenceStyleDataset(torch.utils.data.Dataset):
         sentence, style = instance['sentence'], instance['style']
 
         sentence = self.pad_sentence(sentence)
-        sentence_enc = np.array([self.vocab.get(t, Vocab.UNK_TOKEN) for t in sentence], dtype=np.long)
-
+        # sentence_enc = np.array([self.vocab.get(t, Vocab.UNK_TOKEN) for t in sentence], dtype=np.long)
+        sentence_enc = np.array([self.vocab.get(t, self.vocab.get(Vocab.UNK_TOKEN)) for t in sentence], dtype=np.long)
         style_enc = self.style_vocab[style]
 
         encoded = dict(
@@ -243,7 +243,8 @@ class MeaningEmbeddingSentenceStyleDataset(SentenceStyleDataset):
 
     def calc_meaning_embedding(self, instance, W_emb):
         tokens = [t for t in instance['sentence'] if t not in {Vocab.END_TOKEN, Vocab.PAD_TOKEN, Vocab.UNK_TOKEN}]
-
+        # print(tokens)
+        tokens = [t if t in self.vocab.token2id.keys() else Vocab.UNK_TOKEN for t in tokens]
         nb_tokens = len(tokens)
         nb_style_tokens = int(np.ceil(nb_tokens * self.style_tokens_proportion))
 
