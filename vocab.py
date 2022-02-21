@@ -48,15 +48,34 @@ class Vocab(object):
 
         tokens_to_keep = tokens_most_common | tokens_special
         tokens_to_delete = tokens_all - tokens_to_keep
+        # print('tokens_to_delete check')
+        # for token in tokens_to_delete:
+        #     for i in range(5):
+        #         print(token)
 
         for token in tokens_to_delete:
-            self.token_counts.pop(token)
-            # self.token2id.pop(token)
+            # self.token_counts.pop(token)
+            self.token2id.pop(token)
 
-        self.add_document(self.special_tokens, rebuild=False)
-        self.add_document(self.token_counts.keys(), rebuild=False)
+        # print('token pop check')
+        # for token in tokens_to_delete:
+        #     if token in self.token2id.keys():
+        #         raise ValueError("Failed to pop tokens")
+        
+        print('add_document check')
+        # self.add_document(self.special_tokens, rebuild=False)
+        for token in tokens_to_delete:
+            if token in self.token2id.keys():
+                raise ValueError("check 1 Failed")
+        # self.add_document(self.token_counts.keys(), rebuild=False)
+        for token in tokens_to_delete:
+            if token in self.token2id.keys():
+                raise ValueError("check 2 Failed")
 
         self._rebuild_id2token()
+        for token in tokens_to_delete:
+            if token in self.token2id.keys():
+                raise ValueError("check 3 Failed")
 
         nb_tokens_after = len(self.token2id)
 
