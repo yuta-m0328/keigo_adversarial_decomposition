@@ -52,7 +52,9 @@ class PreprocessConfig:
     lowercase: bool = True
     word_embeddings: str = 'magnitude'
     # word_embeddings: str = 'glove'
+
     max_vocab_size: int = 30000
+
 
     nb_style_dims: int = 50
     nb_style_dims_sentences: int = 50000

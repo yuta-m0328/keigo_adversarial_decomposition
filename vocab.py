@@ -48,8 +48,13 @@ class Vocab(object):
 
         tokens_to_keep = tokens_most_common | tokens_special
         tokens_to_delete = tokens_all - tokens_to_keep
+        # print('tokens_to_delete check')
+        # for token in tokens_to_delete:
+        #     for i in range(5):
+        #         print(token)
 
         for token in tokens_to_delete:
+
             self.token_counts.pop(token)
             self.token2id.pop(token)
 
@@ -58,7 +63,7 @@ class Vocab(object):
         for i,(token, idx) in enumerate(self.token2id.items()):
             self.token2id[token] = i
         self._rebuild_id2token()
- 
+
         nb_tokens_after = len(self.token2id)
 
         print(f'Vocab pruned: {nb_tokens_before} -> {nb_tokens_after}')
